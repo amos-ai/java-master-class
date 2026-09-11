@@ -7,8 +7,8 @@ public class User {
     private String name;
 
 
-    public User(String uuid, String name) {
-        this.uuid = UUID.fromString(uuid);
+    public User(UUID uuid, String name) {
+        this.uuid = uuid;
         this.name = name;
     }
 

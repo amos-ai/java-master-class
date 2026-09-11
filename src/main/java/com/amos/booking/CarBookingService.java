@@ -8,33 +8,15 @@ import com.amos.user.UserService;
 import java.io.CharArrayReader;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.UUID;
 
-/**WHAT SHOULD HAPPEN IF IWANT TO BOOK A CAR?
- * the system must recognize the user
- * I should be able to select acar
- * I should be able to set start&end date
- * i should be able to calculate to car price/day
- * I should be able to total price based start&end date
- * I should be able to if car is available for booking**/
+
 
 public class CarBookingService {
-    /** BOOk a Car
-     * what is user id?
-     * select car
-     * what is the start and end date of the booking?
-     * Calculate price per day for the days booked
-     * are ther cars availble to book?
-     * can user delete a booking
-     *
-     * DELETE A CAR
-     *  does booking exist? - if yes, cancel
-     *  if no, make car available
-     * **/
+
     private CarBookingDao bookingDao;
     private UserService userService;
     private CarService carService;
@@ -70,7 +52,6 @@ public class CarBookingService {
         if (startDate == null || endDate == null) {
             throw new IllegalArgumentException("Date must not be empty");
         }
-        // startDate must come befor endDate
         if (!startDate.isBefore(endDate)) {
             throw new IllegalArgumentException("Start date must come before end date");
         }
@@ -100,34 +81,20 @@ public class CarBookingService {
 
     }
 
-    public void bookCar(Scanner scanner){
-        System.out.println("Car Book started");
-
-        System.out.println("enter user ID; ");
-        String userId = scanner.nextLine();
-
-        System.out.println("You entered: " + userId);
-
-    }
 
     /** == 2. DELETE BOOKING == **/
-    public void deleteBookking(UUID booingId) {
-        // assign carbooking id to this bookingid
-        // check if booking id exist in booking array
-        // delete booking
-        CarBooking booking = bookingDao.findBookingId(booingId);
+    public boolean deleteBooking(UUID bookingId) {
 
-        bookingDao.delete(booingId);
+         bookingDao.findBookingId(bookingId);
 
-        if (booking == null) {
-            throw new IllegalArgumentException("booking not found");
+        if (bookingId == null) {
+         throw new IllegalArgumentException("booking not found");
         }
+
+         return bookingDao.deleteBookingById(bookingId);
     }
         /** === 3. VIEW USER BOOKING **/
-        //System  request for userId
-        // system checks through all booking,
-        // if user has booking, display
-        // if user doesn't have booking - "User doesn't have any booking available"
+
     public CarBooking[] getUserBooking(UUID userId) {
         CarBooking[] allBookings = bookingDao.findAllBooking();
         int count = 0;

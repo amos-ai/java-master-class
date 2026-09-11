@@ -12,7 +12,6 @@ public class UserService {
         this.userDao = userDao;
     }
 
-    // get user
     public User getUserId(UUID uuid) {
 
         return userDao.findUserById(uuid);
