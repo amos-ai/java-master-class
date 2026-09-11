@@ -58,21 +58,6 @@ public class CarBookingDao {
             }
             return false;
 
-          /**
-        for (int i = 0; i < countBooking; i++) {
-            if (bookings[i].getUuid().equals(bookingId)) {
-                for (int j = i; j < countBooking - 1; j++) {
-                    bookings[j] = bookings[j + 1];
-                }
-
-                    bookings[countBooking - 1] = null;
-                    countBooking--;
-
-                    return;
-                }
-            }
-           **/
-
     }
 
 }
