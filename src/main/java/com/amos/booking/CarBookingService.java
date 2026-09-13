@@ -109,7 +109,7 @@ public class CarBookingService {
 
         for (CarBooking booking : allBookings) {
             if (booking != null && booking.getUser().getUuid().equals(userId)) {
-                userBookings[index] = booking;
+                userBookings[index++] = booking;
             }
         }
         return userBookings;
