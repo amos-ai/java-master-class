@@ -15,7 +15,7 @@ public class CarBookingDao {
 
     public void addBooking(CarBooking booking) {
 
-        if (countBooking <= bookings.length) {
+        if (countBooking < bookings.length) {
             bookings[countBooking] = booking;
             countBooking ++;
         }else {
