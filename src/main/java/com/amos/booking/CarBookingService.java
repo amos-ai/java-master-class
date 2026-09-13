@@ -122,7 +122,7 @@ public class CarBookingService {
 
         int count = 0;
         for (Car car : allCars) {
-            if (car != null && bookingDao.carIsBooked(car.getUuid())) {
+            if (car != null && !bookingDao.carIsBooked(car.getUuid())) {
                 temp[count] = car;
                 count++;
             }
