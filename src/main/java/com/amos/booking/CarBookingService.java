@@ -14,7 +14,6 @@ import java.util.Scanner;
 import java.util.UUID;
 
 
-
 public class CarBookingService {
 
     private CarBookingDao bookingDao;
@@ -34,7 +33,7 @@ public class CarBookingService {
                               UUID carId,
                               LocalDate startDate,
                               LocalDate endDate
-                              ) {
+    ) {
         UUID bookingId = UUID.randomUUID();
 
 
@@ -85,15 +84,15 @@ public class CarBookingService {
     /** == 2. DELETE BOOKING == **/
     public boolean deleteBooking(UUID bookingId) {
 
-         bookingDao.findBookingId(bookingId);
+        bookingDao.findBookingId(bookingId);
 
         if (bookingId == null) {
-         throw new IllegalArgumentException("booking not found");
+            throw new IllegalArgumentException("booking not found");
         }
 
-         return bookingDao.deleteBookingById(bookingId);
+        return bookingDao.deleteBookingById(bookingId);
     }
-        /** === 3. VIEW USER BOOKING **/
+    /** === 3. VIEW USER BOOKING **/
 
     public CarBooking[] getUserBooking(UUID userId) {
         CarBooking[] allBookings = bookingDao.findAllBooking();
@@ -158,8 +157,9 @@ public class CarBookingService {
 
 
     /** === VIEW ALL BOOKINGS === **/
-        public CarBooking[] getAllBookings() {
-            return bookingDao.findAllBooking();
-        }
+    public CarBooking[] getAllBookings() {
+        return bookingDao.findAllBooking();
+    }
 
 }
+

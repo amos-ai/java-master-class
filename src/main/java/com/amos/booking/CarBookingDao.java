@@ -2,6 +2,7 @@ package com.amos.booking;
 
 import java.util.UUID;
 
+
 public class CarBookingDao {
 
     private CarBooking [] bookings;
@@ -26,38 +27,46 @@ public class CarBookingDao {
     public CarBooking findBookingId(UUID uuid) {
 
         for (CarBooking booking : bookings) {
-            if (booking != null && booking.equals(uuid)) {
+            if (booking != null && booking.getUuid().equals(uuid)) {
                 return booking;
-            } else {
-                throw new IllegalArgumentException("Booking doesn't exist");
             }
         }
-        return null;
+        throw new IllegalArgumentException("Booking doesn't exist");
     }
 
     public boolean carIsBooked(UUID carId) {
 
-        for (int i = 0; i < countBooking; i++) {
-            if (bookings[i].getCar().getUuid().equals(carId)) {
-                return true;
+        if (carId == null) {
+            return false;
+        }
+
+        for (int i = 0; i < bookings.length; i++) {
+            if (bookings[i] != null
+                    && bookings[i].getCar() != null
+                    && bookings[i].getCar().getUuid() != null) {
+
+                if (carId.equals(bookings[i].getCar().getUuid())){
+                    return true;
+                }
             }
         }
         return false;
+
+
     }
 
     public CarBooking[] findAllBooking() {
         return bookings;
     }
 
-        public  boolean deleteBookingById(UUID bookingId) {
-            for (int i = 0; i < bookings.length; i++) {
-                if (bookings[i] != null && bookings[i].getUuid().equals(bookingId)) {
-                    bookings[i] = null;
-                    return true;
-                }
+    public  boolean deleteBookingById(UUID bookingId) {
+        for (int i = 0; i < bookings.length; i++) {
+            if (bookings[i] != null && bookings[i].getUuid().equals(bookingId)) {
+                bookings[i] = null;
+                return true;
             }
-            return false;
-
+        }
+        return false;
     }
-
 }
+

@@ -82,7 +82,8 @@ public class Main {
                 case 1 -> bookCar(carBookingService, userService, carService, scanner);
 
                 case 2 -> deleteBooking(carBookingService, scanner);
-                case 3 -> carBookingService.getUserBooking(fromString(scanner.nextLine()));
+                //case 3 -> carBookingService.getUserBooking(fromString(scanner.nextLine()));
+                case 3 -> getUserBooking(carBookingService, scanner);
                 case 4 -> getAllBookings(carBookingService, scanner);
                 case 5 -> System.out.println(Arrays.toString(carBookingService.getAvailableCars()));
                 case 6 -> getAvailableElectricCars(carBookingService, scanner);
@@ -177,9 +178,9 @@ public class Main {
 
             for (User user : allUser) {
                 if (user != null) {
-                System.out.println(user.getName());
+                    System.out.println(user.getName());
                 }
-        }
+            }
         } catch (Exception e){
             System.out.println(e.getMessage());
         }
@@ -200,5 +201,22 @@ public class Main {
         }
     }
 
-    
+    private static void getUserBooking(CarBookingService carBookingService,
+                                       Scanner scanner) {
+        try {
+            scanner.nextLine();
+            System.out.println("Put UserBooking Id: ");
+            String userID = scanner.nextLine();
+
+            UUID id = UUID.fromString(userID);
+            CarBooking[] bookingID = carBookingService.getUserBooking(id);
+
+            System.out.println("UserBookingId: " + Arrays.toString(bookingID));
+
+        } catch (IllegalArgumentException e) {
+            System.out.println("User Booking id not found");
+        }
+    }
+
 }
+
