@@ -1,16 +1,14 @@
 package com.amos.user;
 
-import org.w3c.dom.ls.LSOutput;
-
 import java.util.UUID;
 
 public class UserService {
-    private UserDao userDao;
+    private final UserDAO userDao;
 
-    public UserService(UserDao userDao) {
-
+    public UserService(UserDAO userDao) {
         this.userDao = userDao;
     }
+
 
     public User getUserId(UUID uuid) {
 
@@ -19,8 +17,7 @@ public class UserService {
 
     public User[] getAllUsers() {
 
-        return userDao.getAllUsers();
+        return userDao.getUsers();
     }
-
 
 }

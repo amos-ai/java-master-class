@@ -5,7 +5,7 @@ package com.amos.car;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-public class CarDao {
+public class CarArrayDataAccessService implements CarDAO{
     private static final Car[] cars;
 
     static {
@@ -18,18 +18,18 @@ public class CarDao {
         };
     }
 
+    @Override
+    public Car[] getCars() {
+        return cars;
+    }
 
-    public Car findCarById(UUID uuid) {
-
-        for (Car car : cars) {
-            if (car != null && car.getUuid().equals(uuid)) {
+    @Override
+    public Car findCarById(UUID carId) {
+        for (Car car : getCars()) {
+            if (car != null && car.getUuid().equals(carId)) {
                 return car;
             }
         }
         return null;
-        }
-
-    public Car[] findAllCars(){
-        return cars;
     }
 }

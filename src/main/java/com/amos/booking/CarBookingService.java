@@ -5,23 +5,20 @@ import com.amos.car.CarService;
 import com.amos.user.User;
 import com.amos.user.UserService;
 
-import java.io.CharArrayReader;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.Optional;
-import java.util.Scanner;
 import java.util.UUID;
 
 
 public class CarBookingService {
 
-    private CarBookingDao bookingDao;
+    private CarBookingArrayDataAccessService carBookingArrayDataAccessService;
     private UserService userService;
     private CarService carService;
 
-    public CarBookingService(CarBookingDao bookingDao, UserService userService, CarService carService) {
-        this.bookingDao = bookingDao;
+    public CarBookingService(CarBookingArrayDataAccessService bookingDao, UserService userService, CarService carService) {
+        this.carBookingArrayDataAccessService = bookingDao;
         this.userService = userService;
         this.carService = carService;
     }
@@ -70,11 +67,8 @@ public class CarBookingService {
                 totalrendalDays
         );
 
-        if (bookingDao.carIsBooked(carId)) {
-            throw new IllegalArgumentException("Car is already booked");
-        }
 
-        bookingDao.addBooking(booking);
+        carBookingArrayDataAccessService.saveBooking(booking);
         return booking;
 
 
@@ -82,20 +76,20 @@ public class CarBookingService {
 
 
     /** == 2. DELETE BOOKING == **/
-    public boolean deleteBooking(UUID bookingId) {
+    public  void deleteBooking(UUID bookingId) {
 
-        bookingDao.findBookingId(bookingId);
+        carBookingArrayDataAccessService.findBookingById(bookingId);
 
         if (bookingId == null) {
             throw new IllegalArgumentException("booking not found");
         }
+         carBookingArrayDataAccessService.deleteBooking(bookingId);
 
-        return bookingDao.deleteBookingById(bookingId);
     }
     /** === 3. VIEW USER BOOKING **/
 
     public CarBooking[] getUserBooking(UUID userId) {
-        CarBooking[] allBookings = bookingDao.findAllBooking();
+        CarBooking[] allBookings = carBookingArrayDataAccessService.getBookings();
         int count = 0;
 
         for (CarBooking booking : allBookings) {
@@ -121,7 +115,7 @@ public class CarBookingService {
 
         int count = 0;
         for (Car car : allCars) {
-            if (car != null && !bookingDao.carIsBooked(car.getUuid())) {
+            if (car != null && !carBookingArrayDataAccessService.carIsBooked(car.getUuid())) {
                 temp[count] = car;
                 count++;
             }
@@ -158,7 +152,7 @@ public class CarBookingService {
 
     /** === VIEW ALL BOOKINGS === **/
     public CarBooking[] getAllBookings() {
-        return bookingDao.findAllBooking();
+        return carBookingArrayDataAccessService.getBookings();
     }
 
 }

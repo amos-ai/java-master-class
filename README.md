@@ -362,7 +362,7 @@ src/
 
 **Key tasks:**
 - Create POJO classes: `User`, `Car`, `CarBooking`, `Brand` enum
-- Create DAO classes: `UserDao`, `CarDao`, `CarBookingDao`
+- Create DAO classes: `UserArrayDataAccessService`, `CarArrayDataAccessService`, `CarBookingArrayDataAccessService`
 - Create service classes for business logic
 - Implement the CLI menu loop in `Main.java`
 - Seed static data for users and cars
@@ -550,7 +550,7 @@ graph LR
 
 #### Part B - File-Based Implementation (CarBookingDao only)
 
-Create a second implementation for `CarBookingDao` that persists bookings to a file using Java serialization.
+Create a second implementation for `CarBookingArrayDataAccessService` that persists bookings to a file using Java serialization.
 
 The student must figure out how to serialize and deserialize Java objects to/from files. This is a research task — serialization has not been covered in prior courses.
 
@@ -560,7 +560,7 @@ The student must figure out how to serialize and deserialize Java objects to/fro
 - Use `ObjectInputStream` to read objects back
 - The file-based implementation should read from / write to a file (e.g. `bookings.dat`)
 
-> **Bonus:** If the student wants extra practice, they can also create file-based implementations for `CarDao` and `UserDao`. This is optional.
+> **Bonus:** If the student wants extra practice, they can also create file-based implementations for `CarArrayDataAccessService` and `UserArrayDataAccessService`. This is optional.
 
 **Example structure:**
 
@@ -599,7 +599,7 @@ Remove all `new` keyword instantiations from service classes. All dependencies m
 
 ```java
 public class CarBookingService {
-    private final CarBookingDao carBookingDao = new CarBookingDao();
+    private final CarBookingDao carBookingArrayDataAccessService = new CarBookingDao();
     private final CarService carService = new CarService();
 }
 ```
@@ -608,11 +608,11 @@ public class CarBookingService {
 
 ```java
 public class CarBookingService {
-    private final CarBookingDao carBookingDao;
+    private final CarBookingDao carBookingArrayDataAccessService;
     private final CarService carService;
 
-    public CarBookingService(CarBookingDao carBookingDao, CarService carService) {
-        this.carBookingDao = carBookingDao;
+    public CarBookingService(CarBookingDao carBookingArrayDataAccessService, CarService carService) {
+        this.carBookingArrayDataAccessService = carBookingArrayDataAccessService;
         this.carService = carService;
     }
 }
@@ -623,17 +623,17 @@ public class CarBookingService {
 ```java
 public static void main(String[] args) {
     // Swap booking implementation here
-    CarBookingDao carBookingDao = new CarBookingFileDataAccessService("bookings.dat");
-    // CarBookingDao carBookingDao = new CarBookingArrayDataAccessService();
+    CarBookingDao carBookingArrayDataAccessService = new CarBookingFileDataAccessService("bookings.dat");
+    // CarBookingDao carBookingArrayDataAccessService = new CarBookingArrayDataAccessService();
 
-    CarDao carDao = new CarArrayDataAccessService();
-    CarService carService = new CarService(carDao);
+    CarDao carArrayDataAccessService = new CarArrayDataAccessService();
+    CarService carService = new CarService(carArrayDataAccessService);
 
-    UserDao userDao = new UserArrayDataAccessService();
-    UserService userService = new UserService(userDao);
+    UserDao userArrayDataAccessService = new UserArrayDataAccessService();
+    UserService userService = new UserService(userArrayDataAccessService);
 
     CarBookingService carBookingService = new CarBookingService(
-        carBookingDao, carService
+        carBookingArrayDataAccessService, carService
     );
 }
 ```
@@ -859,8 +859,8 @@ Add the JavaFaker dependency and create new DAO implementations that generate ra
 ```
 
 **Tasks:**
-1. Create `UserFakerDataAccessService` implementing `UserDao` — generate 20 random users using `faker.name().fullName()`
-2. Create `CarFakerDataAccessService` implementing `CarDao` — generate random cars using faker (e.g. `faker.lorem().word()` for reg numbers, random `Brand` enum values, random prices, random `isElectric`)
+1. Create `UserFakerDataAccessService` implementing `UserArrayDataAccessService` — generate 20 random users using `faker.name().fullName()`
+2. Create `CarFakerDataAccessService` implementing `CarArrayDataAccessService` — generate random cars using faker (e.g. `faker.lorem().word()` for reg numbers, random `Brand` enum values, random prices, random `isElectric`)
 
 > **Note:** JavaFaker does not have a built-in car provider. The student should explore what faker offers and get creative with generating realistic car data.
 
@@ -886,8 +886,8 @@ public class UserFakerDataAccessService implements UserDao {
 These can be swapped in via dependency injection in `Main.java`:
 
 ```java
-UserDao userDao = new UserFakerDataAccessService();
-// UserDao userDao = new UserArrayDataAccessService();
+UserDao userArrayDataAccessService = new UserFakerDataAccessService();
+// UserDao userArrayDataAccessService = new UserArrayDataAccessService();
 ```
 
 #### Part C - Unit Tests
@@ -921,9 +921,9 @@ Write unit tests for all services and DAO implementations (array and file only �
 
 | Class | Dependencies to mock | What to test |
 |-------|---------------------|-------------|
-| `CarBookingService` | `CarBookingDao`, `CarService`, `UserService` | Book car, delete booking, get bookings, find by ID |
-| `CarService` | `CarDao` | Get all cars, find by ID, get electric cars |
-| `UserService` | `UserDao` | Get all users, find by ID |
+| `CarBookingService` | `CarBookingArrayDataAccessService`, `CarService`, `UserService` | Book car, delete booking, get bookings, find by ID |
+| `CarService` | `CarArrayDataAccessService` | Get all cars, find by ID, get electric cars |
+| `UserService` | `UserArrayDataAccessService` | Get all users, find by ID |
 
 **Array DAOs (no mocking needed — test directly):**
 
