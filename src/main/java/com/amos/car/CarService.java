@@ -5,12 +5,10 @@ import java.util.UUID;
 public class CarService {
 
     private final CarDAO carDAO;
-    private Car[] electric;
 
 
-    public CarService(CarDAO carDAO, Car[] electric) {
+    public CarService(CarDAO carDAO) {
         this.carDAO = carDAO;
-        this.electric = electric;
     }
 
 

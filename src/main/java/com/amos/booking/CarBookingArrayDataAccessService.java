@@ -24,7 +24,7 @@ public class CarBookingArrayDataAccessService implements CarBookingDAO {
             if (booking != null
             && booking.getCar() != null
             && booking.getCar().getUuid() != null
-            && booking.getCar().equals(carId)) {
+            && booking.getCar().getUuid().equals(carId)) {
                 return true;
             }
         }
@@ -62,9 +62,9 @@ public class CarBookingArrayDataAccessService implements CarBookingDAO {
     @Override
     public void deleteBooking(UUID bookingId) {
         for (int i = 0; i < bookings.length; i++) {
-            if (bookings[i].getUuid().equals(bookingId)) {
-
+            if (bookings[i] != null && bookings[i].getUuid().equals(bookingId)) {
                 bookings[i] = null;
+                return;
             }
         }
         throw new IllegalArgumentException("Booking doesn't exist");

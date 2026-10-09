@@ -13,12 +13,12 @@ import java.util.UUID;
 
 public class CarBookingService {
 
-    private CarBookingArrayDataAccessService carBookingArrayDataAccessService;
+    private CarBookingDAO carBookingArrayDataAccessService;
     private UserService userService;
     private CarService carService;
 
-    public CarBookingService(CarBookingArrayDataAccessService bookingDao, UserService userService, CarService carService) {
-        this.carBookingArrayDataAccessService = bookingDao;
+    public CarBookingService(CarBookingDAO carBookingArrayDataAccessService, UserService userService, CarService carService) {
+        this.carBookingArrayDataAccessService = carBookingArrayDataAccessService;
         this.userService = userService;
         this.carService = carService;
     }
@@ -48,13 +48,16 @@ public class CarBookingService {
         if (startDate == null || endDate == null) {
             throw new IllegalArgumentException("Date must not be empty");
         }
+        if (startDate.isBefore(LocalDate.now())) {
+            throw new IllegalArgumentException("Start date cannot be in the past");
+        }
         if (!startDate.isBefore(endDate)) {
             throw new IllegalArgumentException("Start date must come before end date");
         }
 
         long rentalDays = ChronoUnit.DAYS.between(startDate, endDate);
 
-        BigDecimal totalrendalDays =
+        BigDecimal totalrentalDays =
                 BigDecimal.valueOf(rentalDays).multiply(car.getRentalPricePerDay());
 
 
@@ -64,9 +67,12 @@ public class CarBookingService {
                 car,
                 startDate,
                 endDate,
-                totalrendalDays
+                totalrentalDays
         );
 
+        if (carBookingArrayDataAccessService.carIsBooked(carId)) {
+            throw new IllegalArgumentException("Car is already booked");
+        }
 
         carBookingArrayDataAccessService.saveBooking(booking);
         return booking;
@@ -78,10 +84,14 @@ public class CarBookingService {
     /** == 2. DELETE BOOKING == **/
     public  void deleteBooking(UUID bookingId) {
 
-        carBookingArrayDataAccessService.findBookingById(bookingId);
 
         if (bookingId == null) {
             throw new IllegalArgumentException("booking not found");
+        }
+        carBookingArrayDataAccessService.findBookingById(bookingId);
+
+        if (bookingId == null) {
+            throw new IllegalArgumentException("Booking not found");
         }
          carBookingArrayDataAccessService.deleteBooking(bookingId);
 
@@ -129,7 +139,7 @@ public class CarBookingService {
     }
 
     /** === GET ELECTRIC CARS**/
-    public Car[] getAVailableElectricCars() {
+    public Car[] getAvailableElectricCars() {
         Car[] availableCars = getAvailableCars();
         Car[] temp = new Car[availableCars.length];
         int count = 0;

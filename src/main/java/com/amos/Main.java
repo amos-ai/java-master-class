@@ -1,9 +1,14 @@
 package com.amos;
 
 import com.amos.booking.CarBooking;
-import com.amos.booking.CarBookingArrayDataAccessService;
+import com.amos.booking.CarBookingDAO;
 import com.amos.booking.CarBookingService;
-import com.amos.car.*;
+import com.amos.booking.CarBookingArrayDataAccessService;
+import com.amos.booking.CarBookingFileDataAccessService;
+import com.amos.car.Car;
+import com.amos.car.CarArrayDataAccessService;
+import com.amos.car.CarDAO;
+import com.amos.car.CarService;
 import com.amos.user.User;
 import com.amos.user.UserArrayDataAccessService;
 import com.amos.user.UserDAO;
@@ -29,9 +34,11 @@ public class Main {
         UserService userService = new UserService(userArrayDataAccessService);
 
         CarDAO carArrayDataAccessService = new CarArrayDataAccessService();
-        CarService carService = new CarService(carArrayDataAccessService, carArrayDataAccessService.getCars());
+        CarService carService = new CarService(carArrayDataAccessService);
 
-        CarBookingArrayDataAccessService carBookingArrayDataAccessService = new CarBookingArrayDataAccessService(5);
+        CarBookingDAO carBookingArrayDataAccessService = new CarBookingFileDataAccessService("bookings.dat");
+        //CarBookingDAO carBookingArrayDataAccessService = new CarBookingArrayDataAccessService(5);
+
         CarBookingService carBookingService = new CarBookingService(
                 carBookingArrayDataAccessService,
                 userService,
@@ -183,7 +190,7 @@ public class Main {
         try {
             scanner.nextLine();
             System.out.println("View Available Electric Cars");
-            Car[] electricCars = carBookingService.getAVailableElectricCars();
+            Car[] electricCars = carBookingService.getAvailableElectricCars();
 
             for (Car car : electricCars) {
                 System.out.println("- " + car);
