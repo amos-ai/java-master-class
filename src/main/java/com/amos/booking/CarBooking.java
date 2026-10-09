@@ -3,12 +3,15 @@ package com.amos.booking;
 import com.amos.car.Car;
 import com.amos.user.User;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.UUID;
 
-public class CarBooking {
+public class CarBooking implements Serializable {
+    private static final long serialVersionUID = 2L;
+
     private UUID uuid;
     private User user;
     private Car car;

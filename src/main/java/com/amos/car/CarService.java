@@ -3,27 +3,27 @@ package com.amos.car;
 import java.util.UUID;
 
 public class CarService {
-    private CarDao carDao;
-    private Car[] electric;
+
+    private final CarDAO carDAO;
 
 
-    public CarService(CarDao carDao) {
-        this.carDao = carDao;
-        this.electric = electric;
+    public CarService(CarDAO carDAO) {
+        this.carDAO = carDAO;
     }
+
 
 
     public Car getCarById(UUID uuid) {
-        return carDao.findCarById(uuid);
+        return carDAO.findCarById(uuid);
     }
 
     public Car [] getAllCars() {
-        return carDao.findAllCars();
+        return carDAO.getCars();
     }
 
     public Car[] getElectricCars() {
 
-        Car[] cars = carDao.findAllCars();
+        Car[] cars = carDAO.getCars();
         int countElectric = 0;
 
         for (Car car : cars) {

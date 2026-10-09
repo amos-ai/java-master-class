@@ -1,26 +1,24 @@
 package com.amos;
 
 import com.amos.booking.CarBooking;
-import com.amos.booking.CarBookingDao;
+import com.amos.booking.CarBookingDAO;
 import com.amos.booking.CarBookingService;
-import com.amos.car.Brand;
+import com.amos.booking.CarBookingArrayDataAccessService;
+import com.amos.booking.CarBookingFileDataAccessService;
 import com.amos.car.Car;
-import com.amos.car.CarDao;
+import com.amos.car.CarArrayDataAccessService;
+import com.amos.car.CarDAO;
 import com.amos.car.CarService;
 import com.amos.user.User;
-import com.amos.user.UserDao;
+import com.amos.user.UserArrayDataAccessService;
+import com.amos.user.UserDAO;
 import com.amos.user.UserService;
 
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Scanner;
 import java.util.UUID;
-
-
-import static java.util.UUID.fromString;
-import static java.util.UUID.randomUUID;
 
 
 public class Main {
@@ -32,18 +30,22 @@ public class Main {
 
 
 
-        UserDao userDao = new UserDao();
-        CarDao carDa0 = new CarDao();
-        CarBookingDao carBookingDao = new CarBookingDao(5);
+        UserDAO userArrayDataAccessService = new UserArrayDataAccessService();
+        UserService userService = new UserService(userArrayDataAccessService);
 
+        CarDAO carArrayDataAccessService = new CarArrayDataAccessService();
+        CarService carService = new CarService(carArrayDataAccessService);
 
-        UserService userService = new UserService(userDao);
-        CarService carService = new CarService(carDa0);
+        CarBookingDAO carBookingArrayDataAccessService = new CarBookingFileDataAccessService("bookings.dat");
+        //CarBookingDAO carBookingArrayDataAccessService = new CarBookingArrayDataAccessService(5);
+
         CarBookingService carBookingService = new CarBookingService(
-                carBookingDao,
+                carBookingArrayDataAccessService,
                 userService,
                 carService
         );
+
+
 
 
         for (User user : userService.getAllUsers()) {
@@ -82,7 +84,6 @@ public class Main {
                 case 1 -> bookCar(carBookingService, userService, carService, scanner);
 
                 case 2 -> deleteBooking(carBookingService, scanner);
-                //case 3 -> carBookingService.getUserBooking(fromString(scanner.nextLine()));
                 case 3 -> getUserBooking(carBookingService, scanner);
                 case 4 -> getAllBookings(carBookingService, scanner);
                 case 5 -> System.out.println(Arrays.toString(carBookingService.getAvailableCars()));
@@ -143,11 +144,9 @@ public class Main {
                 System.out.print("Select a booking id to delete ");
                 String bookingId = scanner.nextLine();
 
-                if(carBookingService.deleteBooking(UUID.fromString(bookingId))) {
-                    System.out.println("Booking %s deleted successfully".formatted(bookingId));
-                } else {
-                    System.out.println("Unable to delete booking with id: %s".formatted(bookingId));
-                }
+                carBookingService.deleteBooking(UUID.fromString(bookingId));
+
+                System.out.println("Booking %s deleted successfully".formatted(bookingId));
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -191,7 +190,7 @@ public class Main {
         try {
             scanner.nextLine();
             System.out.println("View Available Electric Cars");
-            Car[] electricCars = carBookingService.getAVailableElectricCars();
+            Car[] electricCars = carBookingService.getAvailableElectricCars();
 
             for (Car car : electricCars) {
                 System.out.println("- " + car);

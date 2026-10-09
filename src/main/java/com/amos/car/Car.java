@@ -1,12 +1,15 @@
 package com.amos.car;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.UUID;
 
 // Data model -> This is BMW modelx €70/day
 
-public class Car {
+public class Car implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private UUID uuid;
     private String regNumber;
     private BigDecimal rentalPricePerDay;
