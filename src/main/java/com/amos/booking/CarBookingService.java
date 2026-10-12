@@ -13,12 +13,12 @@ import java.util.UUID;
 
 public class CarBookingService {
 
-    private CarBookingDAO carBookingArrayDataAccessService;
+    private CarBookingDAO carBookingDAO;
     private UserService userService;
     private CarService carService;
 
     public CarBookingService(CarBookingDAO carBookingArrayDataAccessService, UserService userService, CarService carService) {
-        this.carBookingArrayDataAccessService = carBookingArrayDataAccessService;
+        this.carBookingDAO = carBookingArrayDataAccessService;
         this.userService = userService;
         this.carService = carService;
     }
@@ -70,11 +70,11 @@ public class CarBookingService {
                 totalrentalDays
         );
 
-        if (carBookingArrayDataAccessService.carIsBooked(carId)) {
+        if (carBookingDAO.carIsBooked(carId)) {
             throw new IllegalArgumentException("Car is already booked");
         }
 
-        carBookingArrayDataAccessService.saveBooking(booking);
+        carBookingDAO.saveBooking(booking);
         return booking;
 
 
@@ -88,18 +88,15 @@ public class CarBookingService {
         if (bookingId == null) {
             throw new IllegalArgumentException("booking not found");
         }
-        carBookingArrayDataAccessService.findBookingById(bookingId);
+        carBookingDAO.findBookingById(bookingId);
 
-        if (bookingId == null) {
-            throw new IllegalArgumentException("Booking not found");
-        }
-         carBookingArrayDataAccessService.deleteBooking(bookingId);
+        carBookingDAO.deleteBooking(bookingId);
 
     }
     /** === 3. VIEW USER BOOKING **/
 
     public CarBooking[] getUserBooking(UUID userId) {
-        CarBooking[] allBookings = carBookingArrayDataAccessService.getBookings();
+        CarBooking[] allBookings = carBookingDAO.getBookings();
         int count = 0;
 
         for (CarBooking booking : allBookings) {
@@ -125,7 +122,7 @@ public class CarBookingService {
 
         int count = 0;
         for (Car car : allCars) {
-            if (car != null && !carBookingArrayDataAccessService.carIsBooked(car.getUuid())) {
+            if (car != null && !carBookingDAO.carIsBooked(car.getUuid())) {
                 temp[count] = car;
                 count++;
             }
@@ -162,7 +159,7 @@ public class CarBookingService {
 
     /** === VIEW ALL BOOKINGS === **/
     public CarBooking[] getAllBookings() {
-        return carBookingArrayDataAccessService.getBookings();
+        return carBookingDAO.getBookings();
     }
 
 }

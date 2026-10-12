@@ -36,11 +36,11 @@ public class Main {
         CarDAO carArrayDataAccessService = new CarArrayDataAccessService();
         CarService carService = new CarService(carArrayDataAccessService);
 
-        CarBookingDAO carBookingArrayDataAccessService = new CarBookingFileDataAccessService("bookings.dat");
-        //CarBookingDAO carBookingArrayDataAccessService = new CarBookingArrayDataAccessService(5);
+        CarBookingDAO carBookingDAO = new CarBookingFileDataAccessService("bookings.dat");
+        //CarBookingDAO carBookingDAO = new CarBookingArrayDataAccessService(5);
 
         CarBookingService carBookingService = new CarBookingService(
-                carBookingArrayDataAccessService,
+                carBookingDAO,
                 userService,
                 carService
         );
