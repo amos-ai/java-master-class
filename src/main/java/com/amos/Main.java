@@ -17,6 +17,7 @@ import com.amos.user.UserService;
 
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
 
@@ -86,7 +87,7 @@ public class Main {
                 case 2 -> deleteBooking(carBookingService, scanner);
                 case 3 -> getUserBooking(carBookingService, scanner);
                 case 4 -> getAllBookings(carBookingService, scanner);
-                case 5 -> System.out.println(Arrays.toString(carBookingService.getAvailableCars()));
+                case 5 -> getAvailableCars(carBookingService, scanner);
                 case 6 -> getAvailableElectricCars(carBookingService, scanner);
                 case 7 -> getAllUsers(userService, scanner);
                 case 8 -> runningApp = false;
@@ -136,11 +137,11 @@ public class Main {
 
         try {
             scanner.nextLine();
-            CarBooking[] bookings = carBookingService.getAllBookings();
-            if (bookings.length == 0) {
+            List<CarBooking> bookings = carBookingService.getAllBookings();
+            if (bookings.isEmpty()) {
                 System.out.println("There are not active bookings");
             } else {
-                System.out.println(Arrays.toString(bookings));
+                System.out.println(bookings);
                 System.out.print("Select a booking id to delete ");
                 String bookingId = scanner.nextLine();
 
@@ -158,7 +159,7 @@ public class Main {
     private static void getAllBookings(CarBookingService carBookingService, Scanner scanner) {
         try {
             scanner.nextLine();
-            CarBooking[] bookings = carBookingService.getAllBookings();
+            List<CarBooking> bookings = carBookingService.getAllBookings();
 
             for (CarBooking allBooking : bookings) {
                 System.out.println(allBooking);
@@ -173,7 +174,7 @@ public class Main {
         try{
             scanner.nextLine();
             System.out.println(" View All Users");
-            User[] allUser = userService.getAllUsers();
+            List<User> allUser = userService.getAllUsers();
 
             for (User user : allUser) {
                 if (user != null) {
@@ -190,7 +191,7 @@ public class Main {
         try {
             scanner.nextLine();
             System.out.println("View Available Electric Cars");
-            Car[] electricCars = carBookingService.getAvailableElectricCars();
+            List<Car> electricCars = carBookingService.getAvailableElectricCars();
 
             for (Car car : electricCars) {
                 System.out.println("- " + car);
@@ -208,12 +209,36 @@ public class Main {
             String userID = scanner.nextLine();
 
             UUID id = UUID.fromString(userID);
-            CarBooking[] bookingID = carBookingService.getUserBooking(id);
+            List<CarBooking> bookingID = carBookingService.getUserBooking(id);
 
-            System.out.println("UserBookingId: " + Arrays.toString(bookingID));
+            System.out.println("UserBookingId: " + bookingID);
 
         } catch (IllegalArgumentException e) {
             System.out.println("User Booking id not found");
+        }
+    }
+
+    private static void getAvailableCars(
+            CarBookingService carBookingService,
+            Scanner scanner) {
+
+        try {
+            scanner.nextLine();
+
+            List<Car> availableCars =
+                    carBookingService.getAvailableCars();
+
+            if (availableCars.isEmpty()) {
+                System.out.println("No available cars.");
+                return;
+            }
+
+            for (Car car : availableCars) {
+                System.out.println("- " + car);
+            }
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
     }
 

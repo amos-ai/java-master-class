@@ -1,5 +1,6 @@
 package com.amos.user;
 
+import java.util.List;
 import java.util.UUID;
 
 public class UserService {
@@ -15,7 +16,7 @@ public class UserService {
         return userDao.findUserById(uuid);
     }
 
-    public User[] getAllUsers() {
+    public List<User> getAllUsers() {
 
         return userDao.getUsers();
     }
