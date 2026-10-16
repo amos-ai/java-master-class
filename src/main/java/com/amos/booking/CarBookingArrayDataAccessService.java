@@ -1,17 +1,18 @@
 package com.amos.booking;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 
 public class CarBookingArrayDataAccessService implements CarBookingDAO {
 
-    private CarBooking[] bookings;
+    private final List<CarBooking> bookings;
     private int countBooking;
 
-    public CarBookingArrayDataAccessService(int storage) {
+    public CarBookingArrayDataAccessService() {
 
-        bookings = new CarBooking[storage];
-        countBooking = 0;
+        this.bookings = new ArrayList<>();
     }
 
     @Override
@@ -22,9 +23,8 @@ public class CarBookingArrayDataAccessService implements CarBookingDAO {
         }
         for (CarBooking booking : bookings) {
             if (booking != null
-            && booking.getCar() != null
-            && booking.getCar().getUuid() != null
-            && booking.getCar().getUuid().equals(carId)) {
+                    && booking.getCar() != null
+                    && carId.equals(booking.getCar().getUuid())) {
                 return true;
             }
         }
@@ -32,15 +32,18 @@ public class CarBookingArrayDataAccessService implements CarBookingDAO {
     }
 
     @Override
-    public CarBooking[] getBookings() {
-        return bookings;
+    public List<CarBooking> getBookings() {
+
+        return new ArrayList<>(bookings);
     }
 
     @Override
     public CarBooking findBookingById(UUID bookingId) {
 
         for (CarBooking booking : bookings) {
-            if (booking != null && booking.getUuid().equals(bookingId)) {
+            if (booking != null
+                    && bookingId != null
+                    && bookingId.equals(booking.getUuid())) {
                 return booking;
             }
         }
@@ -51,23 +54,47 @@ public class CarBookingArrayDataAccessService implements CarBookingDAO {
     @Override
     public void saveBooking(CarBooking booking) {
 
-        if (countBooking < bookings.length) {
-            bookings[countBooking] = booking;
+        if (booking == null) {
+            throw new IllegalArgumentException(
+                    "Booking cannot be null"
+            );
+        }
+        bookings.add(booking);
+        /**
+        if (countBooking < bookings.size()) {
+            bookings.set(countBooking, booking);
             countBooking ++;
         }else {
             throw new IllegalStateException("Booking Storage is full");
         }
+         **/
     }
 
     @Override
     public void deleteBooking(UUID bookingId) {
-        for (int i = 0; i < bookings.length; i++) {
-            if (bookings[i] != null && bookings[i].getUuid().equals(bookingId)) {
+
+        boolean removed = bookings.removeIf(
+                booking -> booking != null
+                                    && bookingId != null
+                                    && bookingId.equals(booking.getUuid())
+        );
+
+        if (!removed) {
+            throw new IllegalArgumentException(
+                    "Booking doesn't exist"
+            );
+        }
+
+        /**
+        for (int i = 0; i < bookings.size(); i++) {
+            if (bookings[i]  && bookings[i].getUuid().equals(bookingId)) {
                 bookings[i] = null;
                 return;
             }
         }
         throw new IllegalArgumentException("Booking doesn't exist");
+    }
+         **/
     }
 }
 

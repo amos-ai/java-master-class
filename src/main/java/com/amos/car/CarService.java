@@ -1,5 +1,7 @@
 package com.amos.car;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class CarService {
@@ -17,13 +19,13 @@ public class CarService {
         return carDAO.findCarById(uuid);
     }
 
-    public Car [] getAllCars() {
+    public List<Car> getAllCars() {
         return carDAO.getCars();
     }
 
-    public Car[] getElectricCars() {
+    public List<Car> getElectricCars() {
 
-        Car[] cars = carDAO.getCars();
+        List<Car> cars = carDAO.getCars();
         int countElectric = 0;
 
         for (Car car : cars) {
@@ -31,12 +33,12 @@ public class CarService {
                 countElectric++;
             }
         }
-        Car[] electric = new Car[countElectric];
+        List<Car> electric = new ArrayList<>();
         int index = 0;
 
         for (Car car : cars) {
             if (car != null && car.isElectric()) {
-                electric[index] = car;
+                electric.set(index, car);
                 index++;
             }
         }

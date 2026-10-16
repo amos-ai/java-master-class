@@ -8,6 +8,8 @@ import com.amos.user.UserService;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -86,7 +88,7 @@ public class CarBookingService {
 
 
         if (bookingId == null) {
-            throw new IllegalArgumentException("booking not found");
+            throw new IllegalArgumentException("booking ID not found");
         }
         carBookingDAO.findBookingById(bookingId);
 
@@ -95,15 +97,21 @@ public class CarBookingService {
     }
     /** === 3. VIEW USER BOOKING **/
 
-    public CarBooking[] getUserBooking(UUID userId) {
-        CarBooking[] allBookings = carBookingDAO.getBookings();
-        int count = 0;
+    public List<CarBooking> getUserBooking(UUID userId) {
+
+        List<CarBooking> userBookings = new ArrayList<>();
+
+        List<CarBooking> allBookings = carBookingDAO.getBookings();
 
         for (CarBooking booking : allBookings) {
-            if (booking != null && booking.getUser().getUuid().equals(userId) ){
-                count++;
+            if (booking != null &&
+                    booking.getUser() != null
+                    && userId.equals(booking.getUser().getUuid())) {
+
+                userBookings.add(booking);
             }
         }
+        /**
         CarBooking[] userBookings = new CarBooking[count];
         int index = 0;
 
@@ -112,53 +120,42 @@ public class CarBookingService {
                 userBookings[index++] = booking;
             }
         }
+         **/
         return userBookings;
     }
 
     /** === 5. GET AVAILABLE CARS === **/
-    public Car[] getAvailableCars() {
-        Car[] allCars = carService.getAllCars();
-        Car[] temp = new Car[allCars.length];
+    public List<Car> getAvailableCars() {
+        List<Car> allCars = carService.getAllCars();
+        List<Car> availableCars = new ArrayList<>();
 
-        int count = 0;
         for (Car car : allCars) {
-            if (car != null && !carBookingDAO.carIsBooked(car.getUuid())) {
-                temp[count] = car;
-                count++;
+            if (car != null
+                    && !carBookingDAO.carIsBooked(car.getUuid())) {
+                availableCars.add(car);
             }
         }
-        Car[] availableCars = new Car[count];
 
-        for (int i = 0; i < count ; i++) {
-            availableCars[i] = temp[i];
-        }
         return availableCars;
     }
 
     /** === GET ELECTRIC CARS**/
-    public Car[] getAvailableElectricCars() {
-        Car[] availableCars = getAvailableCars();
-        Car[] temp = new Car[availableCars.length];
-        int count = 0;
+    public List<Car> getAvailableElectricCars() {
+        List<Car> electricCars = new ArrayList<>();
 
-        for (Car car : availableCars) {
+
+        for (Car car : getAvailableCars()) {
             if (car.isElectric()) {
-                temp[count] = car;
-                count++;
+                electricCars.add(car);
             }
         }
 
-        Car[] electricCars = new Car[count];
-
-        for (int i = 0; i < count ; i++) {
-            electricCars[i] = temp[i];
-        }
         return electricCars;
     }
 
 
     /** === VIEW ALL BOOKINGS === **/
-    public CarBooking[] getAllBookings() {
+    public List<CarBooking> getAllBookings() {
         return carBookingDAO.getBookings();
     }
 
