@@ -23,6 +23,7 @@ public class CarService {
         return carDAO.getCars();
     }
 
+    /**
     public List<Car> getElectricCars() {
 
         List<Car> cars = carDAO.getCars();
@@ -44,4 +45,5 @@ public class CarService {
         }
         return  electric;
     }
+     **/
 }

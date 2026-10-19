@@ -8,7 +8,6 @@ import java.util.UUID;
 public class CarBookingArrayDataAccessService implements CarBookingDAO {
 
     private final List<CarBooking> bookings;
-    private int countBooking;
 
     public CarBookingArrayDataAccessService() {
 
@@ -60,14 +59,7 @@ public class CarBookingArrayDataAccessService implements CarBookingDAO {
             );
         }
         bookings.add(booking);
-        /**
-        if (countBooking < bookings.size()) {
-            bookings.set(countBooking, booking);
-            countBooking ++;
-        }else {
-            throw new IllegalStateException("Booking Storage is full");
-        }
-         **/
+
     }
 
     @Override
@@ -84,17 +76,6 @@ public class CarBookingArrayDataAccessService implements CarBookingDAO {
                     "Booking doesn't exist"
             );
         }
-
-        /**
-        for (int i = 0; i < bookings.size(); i++) {
-            if (bookings[i]  && bookings[i].getUuid().equals(bookingId)) {
-                bookings[i] = null;
-                return;
-            }
-        }
-        throw new IllegalArgumentException("Booking doesn't exist");
-    }
-         **/
     }
 }
 

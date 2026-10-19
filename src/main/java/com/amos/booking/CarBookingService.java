@@ -111,16 +111,7 @@ public class CarBookingService {
                 userBookings.add(booking);
             }
         }
-        /**
-        CarBooking[] userBookings = new CarBooking[count];
-        int index = 0;
 
-        for (CarBooking booking : allBookings) {
-            if (booking != null && booking.getUser().getUuid().equals(userId)) {
-                userBookings[index++] = booking;
-            }
-        }
-         **/
         return userBookings;
     }
 

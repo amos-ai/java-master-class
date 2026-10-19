@@ -43,16 +43,6 @@ public class CarBookingFileDataAccessService implements CarBookingDAO {
 
         List<CarBooking> bookings = loadFromFile();
         bookings.add(booking);
-        /**
-        List<CarBooking> existingBooking = loadFromFile();
-
-        List<CarBooking> updatedBooking = new CarBooking[existingBooking.size() + 1];
-
-        for (int i = 0; i < existingBooking.size(); i++) {
-            updatedBooking[i] = existingBooking[i];
-        }
-        updatedBooking[updatedBooking.size() - 1] = booking;
-         **/
 
         saveToFile(bookings);
 
@@ -78,28 +68,6 @@ public class CarBookingFileDataAccessService implements CarBookingDAO {
                     "Booking doesn't exist"
             );
         }
-        /**
-        CarBooking[] existingBookings = loadFromFile();
-        int count = 0;
-        for (CarBooking booking : existingBookings) {
-            if (booking != null &&
-                    !booking.getUuid().equals(bookingId)) {
-                count++;
-            }
-        }
-
-        CarBooking[] remainingBookings = new CarBooking[count];
-
-        int index = 0;
-
-        for (CarBooking booking : existingBookings) {
-            if (booking != null &&
-                    !booking.getUuid().equals(bookingId)) {
-                remainingBookings[index] = booking;
-                index++;
-            }
-        }
-         **/
 
         saveToFile(bookings);
     }
@@ -180,28 +148,5 @@ public class CarBookingFileDataAccessService implements CarBookingDAO {
                 throw new RuntimeException(
                         "Couldn't load bookings from file", e);
             }
-
-
-
-        /**
-        File file = new File(filePath);
-
-        if (!file.exists()) {
-            return new ArrayList<>();
-        }
-        try (ObjectInputStream input =
-                     new ObjectInputStream(
-                             new FileInputStream(file))) {
-            Object data = input.readObject();
-            if (data instanceof CarBooking [] bookingsArray) {
-                return new ArrayList<> (list.of(bookingsArray);
-            }
-            return (List<CarBooking>) data;
-        } catch (IOException | ClassNotFoundException e) {
-            throw new RuntimeException(
-                    "Couldn't load bookings from file", e);
-        }
-    }
-         **/
     }
 }
