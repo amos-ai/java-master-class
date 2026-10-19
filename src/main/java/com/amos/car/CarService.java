@@ -23,27 +23,4 @@ public class CarService {
         return carDAO.getCars();
     }
 
-    /**
-    public List<Car> getElectricCars() {
-
-        List<Car> cars = carDAO.getCars();
-        int countElectric = 0;
-
-        for (Car car : cars) {
-            if (car != null && car.isElectric()) {
-                countElectric++;
-            }
-        }
-        List<Car> electric = new ArrayList<>();
-        int index = 0;
-
-        for (Car car : cars) {
-            if (car != null && car.isElectric()) {
-                electric.set(index, car);
-                index++;
-            }
-        }
-        return  electric;
-    }
-     **/
 }
