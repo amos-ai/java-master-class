@@ -2,6 +2,7 @@ package com.amos.user;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 
@@ -28,11 +29,11 @@ public class UserArrayDataAccessService implements UserDAO{
 
     @Override
     public User findUserById(UUID userId) {
-        for (User user : getUsers()) {
-            if (user != null && user.getUuid().equals(userId)) {
-                return user;
-            }
-        }
-        return null;
+
+       return getUsers().stream()
+               .filter(Objects::nonNull)
+               .filter(user -> userId.equals(user.getUuid()))
+               .findFirst()
+               .orElse(null);
     }
 }
