@@ -23,7 +23,7 @@ public class CarBookingFileDataAccessService implements CarBookingDAO {
 
         List<CarBooking> bookings = getBookings();
 
-        return getBookings().stream()
+        return bookings.stream()
                 .filter(Objects::nonNull)
                 .filter(booking -> booking.getCar() != null)
                 .anyMatch((booking ->
@@ -80,7 +80,7 @@ public class CarBookingFileDataAccessService implements CarBookingDAO {
     public CarBooking findBookingById(UUID bookingId) {
         //CarBooking[] bookings = loadFromFile();
 
-       if (bookingId != null) {
+       if (bookingId == null) {
            throw new IllegalArgumentException(
                    "Booking ID cannot be null"
            );

@@ -37,8 +37,8 @@ public class Main {
         CarDAO carArrayDataAccessService = new CarArrayDataAccessService();
         CarService carService = new CarService(carArrayDataAccessService);
 
-        //CarBookingDAO carBookingDAO = new CarBookingFileDataAccessService("bookings.dat");
-        CarBookingDAO carBookingDAO = new CarBookingArrayDataAccessService();
+        CarBookingDAO carBookingDAO = new CarBookingFileDataAccessService("bookings.dat");
+        //CarBookingDAO carBookingDAO = new CarBookingArrayDataAccessService(5);
 
         CarBookingService carBookingService = new CarBookingService(
                 carBookingDAO,

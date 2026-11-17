@@ -42,7 +42,7 @@ public class CarBookingArrayDataAccessService implements CarBookingDAO {
         return bookings.stream()
                 .filter(Objects::nonNull)
                 .filter(booking ->
-                        booking.equals(booking.getUuid()))
+                        bookingId.equals(booking.getUuid()))
                 .findFirst()
                 .orElseThrow(() ->
                         new IllegalArgumentException(
