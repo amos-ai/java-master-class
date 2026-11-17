@@ -5,6 +5,7 @@ import org.w3c.dom.stylesheets.LinkStyle;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 public class CarBookingFileDataAccessService implements CarBookingDAO {
@@ -22,14 +23,11 @@ public class CarBookingFileDataAccessService implements CarBookingDAO {
 
         List<CarBooking> bookings = getBookings();
 
-        for (CarBooking booking : bookings) {
-            if (booking != null
-                    && booking.getCar() != null
-                    && carId.equals(booking.getCar().getUuid())) {
-                return true;
-            }
-        }
-        return false;
+        return getBookings().stream()
+                .filter(Objects::nonNull)
+                .filter(booking -> booking.getCar() != null)
+                .anyMatch((booking ->
+                        carId.equals(booking.getCar().getUuid())));
     }
 
     @Override
@@ -83,14 +81,20 @@ public class CarBookingFileDataAccessService implements CarBookingDAO {
         //CarBooking[] bookings = loadFromFile();
 
        if (bookingId != null) {
-
-        for (CarBooking booking : loadFromFile()) {
-            if (booking != null && bookingId.equals(booking.getUuid())) {
-                return booking;
-            }
-         }
+           throw new IllegalArgumentException(
+                   "Booking ID cannot be null"
+           );
        }
-        throw new IllegalArgumentException("Booking doesn't exist");
+
+        return loadFromFile().stream()
+                .filter(Objects::nonNull)
+                .filter(booking ->
+                        bookingId.equals(booking.getUuid()))
+                .findFirst()
+                .orElseThrow(() ->
+                        new IllegalArgumentException(
+                                "Booking doesn't exist"
+                        ));
     }
 
 

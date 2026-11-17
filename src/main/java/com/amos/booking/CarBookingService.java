@@ -10,7 +10,9 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 
 public class CarBookingService {
@@ -90,8 +92,6 @@ public class CarBookingService {
         if (bookingId == null) {
             throw new IllegalArgumentException("booking ID not found");
         }
-        carBookingDAO.findBookingById(bookingId);
-
         carBookingDAO.deleteBooking(bookingId);
 
     }
@@ -103,16 +103,11 @@ public class CarBookingService {
 
         List<CarBooking> allBookings = carBookingDAO.getBookings();
 
-        for (CarBooking booking : allBookings) {
-            if (booking != null &&
-                    booking.getUser() != null
-                    && userId.equals(booking.getUser().getUuid())) {
-
-                userBookings.add(booking);
-            }
-        }
-
-        return userBookings;
+        return allBookings.stream()
+                .filter(Objects::nonNull)
+                .filter(booking -> booking.getUser() != null)
+                .filter(booking -> userId.equals(booking.getUser().getUuid()))
+                .collect(Collectors.toList());
     }
 
     /** === 5. GET AVAILABLE CARS === **/
@@ -120,14 +115,10 @@ public class CarBookingService {
         List<Car> allCars = carService.getAllCars();
         List<Car> availableCars = new ArrayList<>();
 
-        for (Car car : allCars) {
-            if (car != null
-                    && !carBookingDAO.carIsBooked(car.getUuid())) {
-                availableCars.add(car);
-            }
-        }
-
-        return availableCars;
+        return allCars.stream()
+                .filter(Objects::nonNull)
+                .filter(car -> !carBookingDAO.carIsBooked(car.getUuid()))
+                .collect(Collectors.toList());
     }
 
     /** === GET ELECTRIC CARS**/
@@ -135,13 +126,11 @@ public class CarBookingService {
         List<Car> electricCars = new ArrayList<>();
 
 
-        for (Car car : getAvailableCars()) {
-            if (car.isElectric()) {
-                electricCars.add(car);
-            }
-        }
 
-        return electricCars;
+
+        return getAvailableCars().stream()
+                .filter(Car::isElectric )
+                .collect(Collectors.toList());
     }
 
 
