@@ -7,7 +7,6 @@ import com.amos.user.User;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.UUID;
 
 public class CarArrayDataAccessService implements CarDAO{
@@ -30,11 +29,11 @@ public class CarArrayDataAccessService implements CarDAO{
 
     @Override
     public Car findCarById(UUID carId) {
-
-        return getCars().stream()
-                .filter(Objects::nonNull)
-                .filter(car -> carId.equals(car.getUuid()))
-                .findFirst()
-                .orElse(null);
+        for (Car car : getCars()) {
+            if (car != null && car.getUuid().equals(carId)) {
+                return car;
+            }
+        }
+        return null;
     }
 }

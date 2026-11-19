@@ -2,7 +2,6 @@ package com.amos.booking;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 
@@ -21,13 +20,14 @@ public class CarBookingArrayDataAccessService implements CarBookingDAO {
         if (carId == null) {
             return false;
         }
-
-        return bookings.stream()
-                .filter(Objects::nonNull)
-                .filter(booking ->
-                        booking.getCar() != null)
-                .anyMatch(booking ->
-                        carId.equals(booking.getCar().getUuid()));
+        for (CarBooking booking : bookings) {
+            if (booking != null
+                    && booking.getCar() != null
+                    && carId.equals(booking.getCar().getUuid())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -39,15 +39,14 @@ public class CarBookingArrayDataAccessService implements CarBookingDAO {
     @Override
     public CarBooking findBookingById(UUID bookingId) {
 
-        return bookings.stream()
-                .filter(Objects::nonNull)
-                .filter(booking ->
-                        bookingId.equals(booking.getUuid()))
-                .findFirst()
-                .orElseThrow(() ->
-                        new IllegalArgumentException(
-                                "Booking doesn't exist"
-                        ));
+        for (CarBooking booking : bookings) {
+            if (booking != null
+                    && bookingId != null
+                    && bookingId.equals(booking.getUuid())) {
+                return booking;
+            }
+        }
+        throw new IllegalArgumentException("Booking doesn't exist");
     }
 
 
